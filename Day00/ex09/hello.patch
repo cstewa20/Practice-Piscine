@@ -1,0 +1,11 @@
+--- hello.c	2019-03-05 09:13:06.910797274 +0000
++++ hello_new.c	2019-03-05 09:14:24.919776102 +0000
+@@ -1,6 +1,7 @@
+ #include <stdio.h>
+ 
+-int main()
++int main(nt argc, char *argv[])
+ {
+ 	printf("Hello World\n");
++	return (0);
+ }

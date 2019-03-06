@@ -1,0 +1,22 @@
+/* List all files except those starting with a dot
+** ls -A
+** List all directories
+** ls -d
+** List the contents separated by commas
+** ls -m
+** List all files and directories separated by a comma
+** For getting crtimes
+**	stat filename
+**	ls -i filename
+**	df -h
+**	sudo debugfs -R 'stat <inode>' root partition
+** sudo debugfs -R 'stat <256056>' /dev/sda1 | grep crtime
+** ls -li | awk {'printf ("%6s\t%10s\n", $1, $10)'} | sudo debugfs -R 'stat <256056>' /dev/sda1 | grep crtime
+*************************************************************************************************************
+** The following bash script will almost do the trick.
+** 	for f in ./*
+**	do
+**     	 	#ls -lim > result | awk {'printf ("%6s\t%10s\n", $1, $10)'} |
+**     		sudo debugfs -R "stat /home/vagrant/42/Day00/ex02/$f" /dev/sda1 | grep crtime
+**	done
+

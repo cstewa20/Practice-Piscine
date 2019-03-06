@@ -1,0 +1,5 @@
+#!/bin/bash
+for filename in ./*
+do
+	sudo debugfs -R "stat /home/vagrant/42/Day00/ex02/$filename" /dev/sda1 | grep crtime
+done
