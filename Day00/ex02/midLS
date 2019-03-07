@@ -1,5 +1,62 @@
 #!/bin/bash
-for filename in ./*
-do
-	sudo debugfs -R "stat /home/vagrant/42/Day00/ex02/$filename" /dev/sda1 | grep crtime
+#for filename in ./*
+#do
+#	sudo debugfs -R "stat /home/vagrant/42/Day00/ex02/$filename" /dev/sda1 | grep crtime
+#done
+
+# Set mark directories on
+# To prevent Bash from giving the: line editing not enabled warning
+#if [[ $- =~ i ]]; then
+#	bind 'set mark-directories on'
+#fi
+
+# Set mark directories on
+# bind 'set mark-directories on'
+
+# function to print the elements of an array.  crtime is an array
+# print_array "${array_name[@]}"
+print_array()
+{
+	# run through array and print each entry
+	local array
+	arraay=("$@")
+	for i in "${array[@]}" ; do
+		printf '%s ' "$i"
+	done
+	# print a new line
+	printf '\n'
+}
+
+
+crtime-at() {
+for target in *; do
+inode=$(ls -di "${target}" | cut -d ' ' -f 1)
+fs=$(findmnt -n -o SOURCE --target "${target}")
+crtime=$(sudo debugfs -R 'stat <'"${inode}"'>' "${fs}" 2>/dev/null | grep -oP 'crtime.*--\s*\K.*')
+crtime=$(date -d "${crtime}" +%Y-%m-%d\ %H:%M:%S)
+printf "%s\t%s\n" "${crtime}" "${target}" >> /tmp/crtime
 done
+crtime=$(sort -t$'\t' -k1 -n /tmp/crtime)
+printf '%s|' "${crtime}"; echo -
+rm /tmp/crtime
+echo
+}
+
+
+
+# xstat utility to print out filename and crtime
+xstat() {
+ for target in "${@}"; do
+    #output_name=$(ls -pi "${target}" | cut -d ' ' -f 2)
+    inode=$(ls -di "${target}" | cut -d ' ' -f 1)
+    fs=$(df "${target}"  | tail -1 | awk '{print $1}')
+    crtime=$(sudo debugfs -R 'stat <'"${inode}"'>' "${fs}" 2>/dev/null |
+    grep -oP 'crtime.*--\s*\K.*')
+    printf "%s\t%s\n" "${crtime}" "${target}"
+    #printf "%s %s, " "${crtime}" "${target}"
+  done
+  #printf "\n"
+}
+
+#xstat *
+crtime-at *
