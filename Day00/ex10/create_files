@@ -1,0 +1,6 @@
+#!/bin/bash
+
+touch one~ two~ three~
+touch "#one#" "#two#" "#three#"
+touch four five six
+
